@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        #app1{
+            width: 500px;
+            margin: 100px auto;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div id="app1">
+        <el-button type="primary" size="small" @click="loadProxy">加载代理配置</el-button>
+        <el-button type="primary" size="small" @click="pingProxy">测试代理是否正常</el-button>
+        <el-button type="warning" size="small" @click="empty">清空</el-button>
+        <el-row style="margin-top: 20px;"><span>代理配置为：</span><span style="color:red">{{proxyUrl}}</span></el-row>
+
+    </div>
+
+</div>
+</body>
+<!-- import Vue before Element -->
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<!-- import JavaScript -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {proxyUrl: ''}
+        },
+        methods:{
+            loadProxy(){
+                //this.proxyUrl = "127.0.0.1:1080"
+                goFuncLoadProxy().then(res=>{
+                    console.log(res)
+                    var data = JSON.parse(res);
+                    if (data.code > 0){
+                        alert(data.errMsg)
+                        return
+                    }else {
+                        this.proxyUrl = data.data
+                    }
+                }).catch(err=>{
+                    console.log(err)
+                })
+
+            },
+            pingProxy(){
+                //this.proxyUrl = "127.0.0.1:1080"
+                goFuncPingProxy(this.proxyUrl).then(res=>{
+                    console.log(res)
+                    var data = JSON.parse(res);
+                    if (data.code > 0){
+                        alert(data.errMsg)
+                        return
+                    }else {
+                        alert("代理正常！")
+                    }
+                }).catch(err=>{
+                    console.log(err)
+                })
+
+            },
+            empty(){
+                this.proxyUrl = ""
+            }
+        }
+    })
+</script>
+</html>
